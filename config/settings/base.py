@@ -110,7 +110,15 @@ MANAGERS = ADMINS
 # ------------------------------------------------------------------------------
 # See: https://docs.djangoproject.com/en/dev/ref/settings/#databases
 DATABASES = {
-    'default': env.db('DATABASE_URL', default='postgres:///techfest'),
+        #'default': env.db('DATABASE_URL', default='postgres:///techfest'),
+        'default':{
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'techfest',
+        'USER': 'postgres',
+        'PASSWORD': 'password',
+        'HOST': 'localhost',
+        'PORT': '5432',
+        }
 }
 DATABASES['default']['ATOMIC_REQUESTS'] = True
 
