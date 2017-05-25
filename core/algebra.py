@@ -3,8 +3,8 @@ import math
 import sys
 import sympy
 from collections import defaultdict
-from _fractions import simplify_fraction as simplify_frac
-from meta import AlgebraMeta
+from ._fractions import simplify_fraction as simplify_frac
+from .meta import AlgebraMeta
 
 
 class Algebra(metaclass=AlgebraMeta):
@@ -107,6 +107,8 @@ class QuadraticEquation:
             raise ValueError('No real roots')
         self.res1 = (-self.b + sympy.sqrt(d)) / (2 * self.a)
         self.res2 = (-self.b - sympy.sqrt(d)) / (2 * self.a)
+        if self.res1 == self.res2:
+            return self.res1,
 
         return self.res1, self.res2
 
