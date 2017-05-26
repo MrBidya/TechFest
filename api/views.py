@@ -23,11 +23,11 @@ class QuadradricEquationView(APIView):
         #        {"x2" : 3}
         #    ]
         #}
-        result = solve_quad_eq(request.data.get('equation'))
+        result, eq_var = solve_quad_eq(request.data.get('equation'))
         if result == 'No real roots':
             data = {"answer": result}
         else:
-            data = {"answer": [{"x{}".format(index + 1):int(value) if type(value) == Integer else str(value)} for index, value in enumerate(result)]}
+            data = {"answer": [{"{}{}".format(eq_var, index + 1):int(value) if type(value) == Integer else str(value)} for index, value in enumerate(result)]}
         return Response(data=data)
 
 

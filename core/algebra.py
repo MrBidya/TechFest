@@ -5,6 +5,7 @@ import sympy
 from collections import defaultdict
 from ._fractions import simplify_fraction as simplify_frac
 from .meta import AlgebraMeta
+from .equation_helpers import get_eq_power, extract_var, get_quad_coeffs, prepare_input
 
 
 class Algebra(metaclass=AlgebraMeta):
@@ -79,8 +80,45 @@ class Algebra(metaclass=AlgebraMeta):
         return simplify_frac((fraction))
 
 
-class QuadraticEquation:
-    def __init__(self, a=1, b=1, c=1, var='x', res1=None, res2=None, string=None):
+class Equation:
+    def __repr__(self):
+        return self.string
+
+    def __str__(self):
+        return self.__repr__()
+
+    @staticmethod
+    def from_str(input_str):
+        # Can be made more generic using metaclass and inserting power
+        # to each subclass but for now powers 2 and 4 are enough
+        input_str = prepare_input(input_str)
+        powers_to_eq_types = {
+                                2 : QuadraticEquation,
+                                4  : BiquadraticEquation
+                              }
+        eq_power = get_eq_power(input_str)
+
+        var = extract_var(input_str)
+        coefs = re.findall(r'-?[0-9]+', input_str)
+        if len(coefs) != 4:
+            a, b, c = get_quad_coeffs(input_str, eq_var=var)
+#            raise ValueError('Not enough coefficients passed. Must be 4, instead got {}'.format(len(coefs)))
+        else:
+        # Coefs contains the following:
+            # index 0 is a
+            a = int(coefs[0])
+            # index 1 is the power of x which must be always 2
+            # index 2 is b
+            b = int(coefs[2])
+            # index 3 is c
+            c = int(coefs[3])
+        # Where the magic happens ^_^
+        obj = powers_to_eq_types[eq_power](a=a, b=b, c=c, var=var, string=input_str.replace(' ',''))
+        return obj
+
+
+class QuadraticEquation(Equation):
+    def __init__(self, a=1, b=1, c=1, var='x',power=2, res1=None, res2=None, string=None):
         self.SQRT_SIGN = '√'
         self.INVALID_QUADRATIC_EQUATION = 'Invalid quadratic equation!'
 
@@ -90,16 +128,11 @@ class QuadraticEquation:
         self.var = var
         self.res1 = res1
         self.res2 = res2
+        self.power = power
         if string is not None:
             self.string = string
         else:
             self.string = '{}*{}^2 {}*{} {}'.format(self.a, self.var, self.b, self.var, self.c)
-
-    def __repr__(self):
-        return self.string
-
-    def __str__(self):
-        return self.__repr__()
 
     def solve(self):
         d = self.b ** 2 - 4 * self.a * self.c
@@ -113,58 +146,37 @@ class QuadraticEquation:
         return self.res1, self.res2
 
 
-    @staticmethod
-    def __extract_var(input_str):
-        for letter in [chr(x) for x in range(97, 123)]:
-            # lower lowers all letters
-            if letter in input_str.lower():
-                return letter
-        raise ValueError('Cannot parse equation variable')
+class BiquadraticEquation(QuadraticEquation):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.power = 4
 
-    @staticmethod
-    def __get_quad_coeffs(input_str):
-        var = QuadraticEquation.__extract_var(input_str)
-        try:
-            a = int(input_str[:input_str.index(var)].replace('*', ''))
-        except ValueError:
-            if input_str[0] == '-':
-                a = -1
-            else:
-                a = 1
+    def solve(self):
+        # This is some sort of a hack, but may work out
+        # We say x^2 = y and solve the quad eq
+        y_eq = self.string.replace('^2', '').replace('^4', '^2')
+        y1, y2 = QuadraticEquation.from_str(y_eq).solve()
 
-        try:
-            b = input_str.split(var)[1].split('^2')[1].replace('*', '')
-            b = int(b)
-        except ValueError:
-            if b == '-':
-                b = -1
-            elif b == '+':
-                b = 1
-        # This takes the last number.
-        # IMPORTANT:
-        # The input string MUST be in valid format or else it will break
-        c = int(re.findall(r'[-+]*\d+', input_str)[-1])
-        return a, b, c
+        # Now solve y1 and y2
+        solutions = []
+        if y1 > 0:
+            sol1, sol2 = sympy.sqrt(y1), -sympy.sqrt(y1)
+            solutions.extend([sol1, sol2])
+        elif y1 == 0:
+            sol1 = sol2 = sympy.sqrt(y1)
+            solutions.append(sol1)
+
+        if y2 > 0:
+            sol3, sol4 = sympy.sqrt(y2), -sympy.sqrt(y2)
+            solutions.extend([sol3, sol4])
+        elif y2 == 0:
+            sol3 = sol4 = sympy.sqrt(y2)
+            solutions.append(sol3)
+        if not solutions:
+            return 'No real roots'
+        return solutions
 
 
-    @staticmethod
-    def from_str(input_str, var=None):
-        # Extract var if not passed
-        input_str = input_str.replace(' ','')
-        if var is None:
-            var = QuadraticEquation.__extract_var(input_str)
-        coefs = re.findall(r'-?[0-9]+', input_str)
-        if len(coefs) != 4:
-            a, b, c = QuadraticEquation.__get_quad_coeffs(input_str)
-#            raise ValueError('Not enough coefficients passed. Must be 4, instead got {}'.format(len(coefs)))
-        else:
-        # Coefs contains the following:
-            # index 0 is a
-            a = int(coefs[0])
-            # index 1 is the power of x which must be always 2
-            # index 2 is b
-            b = int(coefs[2])
-            # index 3 is c
-            c = int(coefs[3])
 
-        return QuadraticEquation(a=a, b=b, c=c, var=var, string=input_str.replace(' ',''))
+
+
