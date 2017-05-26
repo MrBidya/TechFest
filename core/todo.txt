@@ -1,2 +1,4 @@
 - Use db to cache already calculated problems
 - Integrate celery
+- Setup /api/ to return info about all available endpoints and how to consume
+  them
