@@ -1,0 +1,2 @@
+- Use db to cache already calculated problems
+- Integrate celery
