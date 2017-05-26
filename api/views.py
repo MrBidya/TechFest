@@ -10,10 +10,13 @@ from .helpers import solve_quad_eq
 
 class IndexView(APIView):
     def get(self, request):
-        return Response(data={'fooasdasd':'bar'})
+        from .urls import urlpatterns
+        data = {"available endpoints": [x.regex.pattern for x in urlpatterns]}
+        # TODO: can add description to each endpoint and how it should be used
+        return Response(data=data)
 
 
-class QuadradricEquationView(APIView):
+class EquationView(APIView):
     def post(self, request):
         # Return format:
 

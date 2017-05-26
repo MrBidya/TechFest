@@ -1,83 +1,9 @@
-import re
 import math
-import sys
+import re
 import sympy
-from collections import defaultdict
-from ._fractions import simplify_fraction as simplify_frac
-from .meta import AlgebraMeta
+import sys
 from .equation_helpers import get_eq_power, extract_var, get_quad_coeffs, prepare_input
-
-
-class Algebra(metaclass=AlgebraMeta):
-    def __init__(self):
-        self.SQRT_SIGN = '√'
-
-    def get_primes(self, n):
-        primes = []
-        count = 2
-        while count < n:
-            isprime = True
-            for x in range(2, int(math.sqrt(count) + 1)):
-                if count % x == 0:
-                    isprime = False
-                    break
-            if isprime:
-                primes.append(count)
-            count += 1
-        return primes
-
-    def get_prime_delimeters(self, n):
-        primes_to_n = self.get_primes(n)
-        prime_delimeters = [x for x in primes_to_n if n % x == 0]
-        return prime_delimeters
-
-    def decompose_number(self, number):
-        primes = self.get_primes(number)
-        decomposed = []
-        index = 0
-        while number not in primes and index < len(primes):
-            while number % primes[index] == 0:
-                decomposed.append(primes[index])
-                number /= primes[index]
-            index += 1
-        decomposed.append(int(number))
-        if 1 in decomposed:
-            decomposed.remove(1)
-        return decomposed
-
-    def create_histogram(self, items):
-        histogram = defaultdict(int)
-        for i in items:
-            histogram[i] += 1
-        return histogram
-
-    def get_divisors(self, n):
-        n = int(n)
-        return [x for x in range(1, n + 1) if n % x == 0]
-
-    def get_common_divisors(self, divisors_string):
-        # This method prepares inner call so that user can call this
-        # method directly
-
-        # Numbers can be split by anything but a number e.g. : 40 $2 should
-        # parse to (40, 2)
-        divisors = re.findall('[0-9]+', divisors_string)
-
-        if len(divisors) != 2:
-            raise ValueError('Invalid input for divisors string!')
-        return self.__get_common_divisors(divisors[0], divisors[1])
-
-    def __get_common_divisors(self, a, b):
-        nominator_divisors = self.get_divisors(a)
-        denominator_divisors = self.get_divisors(b)
-        return sorted(list(set(nominator_divisors) & set(denominator_divisors)))
-
-
-    def simplify_fraction(self, fraction):
-        fraction = [int(x) for x in fraction.split('/')]
-        if any(int(t) <= 0 for t in fraction):
-            return 'Simplify fraction works with positive integers for now!'
-        return simplify_frac((fraction))
+from .meta import AlgebraMeta
 
 
 class Equation:
@@ -175,8 +101,4 @@ class BiquadraticEquation(QuadraticEquation):
         if not solutions:
             return 'No real roots'
         return solutions
-
-
-
-
 

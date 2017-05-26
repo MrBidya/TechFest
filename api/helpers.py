@@ -1,4 +1,4 @@
-from core.algebra import Equation
+from core.algebra.equation import Equation
 
 def solve_quad_eq(equation):
     if not equation:
