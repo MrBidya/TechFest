@@ -4,6 +4,7 @@ import sympy
 import sys
 from .equation_helpers import get_eq_power, extract_var, get_quad_coeffs, prepare_input
 from .meta import AlgebraMeta
+from .exceptions import EquationPowerNotSupported
 
 
 class Equation:
@@ -25,28 +26,12 @@ class Equation:
                               }
         eq_power = get_eq_power(input_str)
         if eq_power not in powers_to_eq_types:
-            raise ValueError('Got equation from {} power which is not supported!'.format(eq_power))
+            raise EquationPowerNotSupported('Got equation from {} power which is not supported!'.format(eq_power))
         # Prepare input_str for specific equation type
         eq_type = powers_to_eq_types[eq_power]
         input_str = prepare_input(input_str, eq_type)
 
-        var = extract_var(input_str)
-        coefs = re.findall(r'-?[0-9]+', input_str)
-        if len(coefs) != 4:
-            a, b, c = get_quad_coeffs(input_str, eq_var=var)
-#            raise ValueError('Not enough coefficients passed. Must be 4, instead got {}'.format(len(coefs)))
-        else:
-        # Coefs contains the following:
-            # index 0 is a
-            a = int(coefs[0])
-            # index 1 is the power of x which must be always 2
-            # index 2 is b
-            b = int(coefs[2])
-            # index 3 is c
-            c = int(coefs[3])
-        # Where the magic happens ^_^
-        obj = powers_to_eq_types[eq_power](a=a, b=b, c=c, var=var, string=input_str.replace(' ',''))
-        return obj
+        return eq_type.from_str(input_str)
 
 class LinearEquation(Equation):
     pass
@@ -68,6 +53,26 @@ class QuadraticEquation(Equation):
             self.string = string
         else:
             self.string = '{}*{}^2 {}*{} {}'.format(self.a, self.var, self.b, self.var, self.c)
+
+    @staticmethod
+    def from_str(input_str):
+        var = extract_var(input_str)
+        coefs = re.findall(r'-?[0-9]+', input_str)
+        if len(coefs) != 4:
+            # If here, then prepare_input method has failed. Raise
+            raise ValueError('Something went wrong while preparing input_str')
+
+        # Coefs contains the following:
+        # index 0 is a
+        a = int(coefs[0])
+        # index 1 is the power of x which must be always 2
+        # index 2 is b
+        b = int(coefs[2])
+        # index 3 is c
+        c = int(coefs[3])
+        obj = QuadraticEquation(a=a, b=b, c=c, var=var, string=input_str.replace(' ',''))
+        return obj
+
 
     def solve(self):
         d = self.b ** 2 - 4 * self.a * self.c

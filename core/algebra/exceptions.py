@@ -3,3 +3,6 @@ class EquationNotSupported(Exception):
 
 class NoRealRoots(Exception):
     pass
+
+class EquationPowerNotSupported(Exception):
+    pass

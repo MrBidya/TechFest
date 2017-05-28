@@ -41,7 +41,6 @@ def prepare_quad_eq(input_str):
         split_by_var[1] = split_by_var[1] + '*'
         input_str = eq_var.join(split_by_var)
 
-
     return input_str
 
 
