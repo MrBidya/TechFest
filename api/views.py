@@ -5,7 +5,7 @@ from rest_framework.response import Response
 from rest_framework import authentication, permissions
 
 # Create your views here.
-from .helpers import solve_quad_eq
+from .helpers import solve_eq
 
 
 class IndexView(APIView):
@@ -18,6 +18,9 @@ class IndexView(APIView):
 
 class EquationView(APIView):
     def post(self, request):
+        eq = request.data.get('equation')
+        if not eq:
+            return Response(data={'You must pass a keyvalue pair with key "equation" and the actual equation as value string' })
         # Return format:
 
         #{
@@ -26,7 +29,7 @@ class EquationView(APIView):
         #        {"x2" : 3}
         #    ]
         #}
-        result, eq_var = solve_quad_eq(request.data.get('equation'))
+        result, eq_var = solve_eq(request.data.get('equation'))
         if result == 'No real roots':
             data = {"answer": result}
         else:

@@ -19,6 +19,7 @@ class Equation:
         # to each subclass but for now powers 2 and 4 are enough
         input_str = prepare_input(input_str)
         powers_to_eq_types = {
+                                1 : LinearEquation,
                                 2 : QuadraticEquation,
                                 4  : BiquadraticEquation
                               }
@@ -41,6 +42,9 @@ class Equation:
         # Where the magic happens ^_^
         obj = powers_to_eq_types[eq_power](a=a, b=b, c=c, var=var, string=input_str.replace(' ',''))
         return obj
+
+class LinearEquation:
+    pass
 
 
 class QuadraticEquation(Equation):

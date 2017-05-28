@@ -38,7 +38,11 @@ def get_quad_coeffs(input_str, eq_var):
     # This takes the last number.
     # IMPORTANT:
     # The input string MUST be in valid format or else it will break
-    c = int(re.findall(r'[-+]*\d+', input_str)[-1])
+    match = re.search(r'\d+$', input_str)
+    if match is not None:
+        c = int(match.group())
+    else:
+        c = 0
     return a, b, c
 
 

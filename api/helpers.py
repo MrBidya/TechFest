@@ -1,6 +1,6 @@
 from core.algebra.equation import Equation
 
-def solve_quad_eq(equation):
+def solve_eq(equation):
     if not equation:
         # throw exception or return '' ?
         return ''
