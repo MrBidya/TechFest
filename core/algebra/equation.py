@@ -17,13 +17,18 @@ class Equation:
     def from_str(input_str):
         # Can be made more generic using metaclass and inserting power
         # to each subclass but for now powers 2 and 4 are enough
-        input_str = prepare_input(input_str)
+        input_str = input_str.replace(' ','')
         powers_to_eq_types = {
                                 1 : LinearEquation,
                                 2 : QuadraticEquation,
                                 4  : BiquadraticEquation
                               }
         eq_power = get_eq_power(input_str)
+        if eq_power not in powers_to_eq_types:
+            raise ValueError('Got equation from {} power which is not supported!'.format(eq_power))
+        # Prepare input_str for specific equation type
+        eq_type = powers_to_eq_types[eq_power]
+        input_str = prepare_input(input_str, eq_type)
 
         var = extract_var(input_str)
         coefs = re.findall(r'-?[0-9]+', input_str)
@@ -43,7 +48,7 @@ class Equation:
         obj = powers_to_eq_types[eq_power](a=a, b=b, c=c, var=var, string=input_str.replace(' ',''))
         return obj
 
-class LinearEquation:
+class LinearEquation(Equation):
     pass
 
 

@@ -18,8 +18,8 @@ class IndexView(APIView):
 
 class EquationView(APIView):
     def post(self, request):
-        eq = request.data.get('equation')
-        if not eq:
+        request_eq = request.data.get('equation')
+        if not request_eq:
             return Response(data={'You must pass a keyvalue pair with key "equation" and the actual equation as value string' })
         # Return format:
 
@@ -29,7 +29,7 @@ class EquationView(APIView):
         #        {"x2" : 3}
         #    ]
         #}
-        result, eq_var = solve_eq(request.data.get('equation'))
+        result, eq_var = solve_eq(request_eq)
         if result == 'No real roots':
             data = {"answer": result}
         else:
