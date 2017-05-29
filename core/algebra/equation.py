@@ -4,7 +4,7 @@ import sympy
 import sys
 from .equation_helpers import get_eq_power, extract_var, get_quad_coeffs, prepare_input
 from .meta import AlgebraMeta
-from .exceptions import EquationPowerNotSupported
+from .exceptions import EquationPowerNotSupportedException
 
 
 class Equation:
@@ -26,7 +26,7 @@ class Equation:
                               }
         eq_power = get_eq_power(input_str)
         if eq_power not in powers_to_eq_types:
-            raise EquationPowerNotSupported('Got equation from {} power which is not supported!'.format(eq_power))
+            raise EquationPowerNotSupportedException('Got equation from {} power which is not supported!'.format(eq_power))
         # Prepare input_str for specific equation type
         eq_type = powers_to_eq_types[eq_power]
         input_str = prepare_input(input_str, eq_type)
@@ -90,6 +90,25 @@ class BiquadraticEquation(QuadraticEquation):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.power = 4
+
+    @staticmethod
+    def from_str(input_str):
+        var = extract_var(input_str)
+        coefs = re.findall(r'-?[0-9]+', input_str)
+        if len(coefs) != 5:
+            # If here, then prepare_input method has failed. Raise
+            raise ValueError('Something went wrong while preparing input_str')
+
+        # Coefs contains the following:
+        # index 0 is a
+        a = int(coefs[0])
+        # index 1 is the power of x which must be always 2
+        # index 2 is b
+        b = int(coefs[2])
+        # index 3 is c
+        c = int(coefs[4])
+        obj = BiquadraticEquation(a=a, b=b, c=c, var=var, string=input_str.replace(' ',''))
+        return obj
 
     def solve(self):
         # This is some sort of a hack, but may work out

@@ -1,4 +1,5 @@
 import re
+from .exceptions import InvalidFormatException
 #from core.algebra.equation import LinearEquation, QuadraticEquation, BiquadraticEquation
 
 
@@ -21,6 +22,9 @@ def prepare_quad_eq(input_str):
     x^2-x-1 => 1*x^2-1*x-1
     '''
     eq_var = extract_var(input_str)
+    # Check if normalized
+    if input_str.count(eq_var) != 2:
+        raise InvalidFormatException('Quadratic equations look like this -> a*x^2+b*x+c, got instead {}'.format(input_str))
     split_by_var = input_str.split(eq_var)
 
     # Check if coeff A is passed
@@ -41,11 +45,56 @@ def prepare_quad_eq(input_str):
         split_by_var[1] = split_by_var[1] + '*'
         input_str = eq_var.join(split_by_var)
 
+    # Set coeff C if not passed
+    c_coef = input_str.split('*{}'.format(eq_var))[-1]
+    # Unfortunately this is the cleanest way to check if it is an integer
+    try:
+        c_coef = int(c_coef)
+    except ValueError:
+        c_coef = 0
+        input_str = input_str + '+0'
+
     return input_str
 
 
 def prepare_bidquad_eq(input_str):
-    pass
+    '''
+    x^4-x^2-1 => 1*x^4-1*x^2-1
+    Note that this method is almost identical to
+    prepare_quad_eq, however, the extra x^2 is making trouble
+    while parsing
+    '''
+    eq_var = extract_var(input_str)
+    split_by_var = input_str.split(eq_var)
+
+    # Check if coeff A is passed
+    if split_by_var[0] == '':
+        input_str = '1*' + input_str
+        split_by_var = input_str.split(eq_var)
+    # Check if coeff A is passed with * sign
+    if '*' not in split_by_var[0]:
+        split_by_var[0] = split_by_var[0] + '*'
+        input_str = eq_var.join(split_by_var)
+
+    # Check if coeff B is passed
+    second_part = len(re.findall(r'\d+', split_by_var[1]))
+    if second_part < 2:
+        split_by_var[1] = split_by_var[1] + '1*'
+        input_str = eq_var.join(split_by_var)
+    elif second_part == 2 and split_by_var[1][-1] != '*':
+        split_by_var[1] = split_by_var[1] + '*'
+        input_str = eq_var.join(split_by_var)
+
+    # Set coeff C if not passed
+    c_coef = input_str.split('*{}'.format(eq_var))[-1][2:]
+    # Unfortunately this is the cleanest way to check if it is an integer
+    try:
+        c_coef = int(c_coef)
+    except ValueError:
+        c_coef = 0
+        input_str = input_str + '+0'
+
+    return input_str
 
 
 def prepare_linear_eq(input_str):

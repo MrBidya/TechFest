@@ -1,8 +1,11 @@
-class EquationNotSupported(Exception):
+class EquationNotSupportedException(Exception):
     pass
 
-class NoRealRoots(Exception):
+class NoRealRootsException(Exception):
     pass
 
-class EquationPowerNotSupported(Exception):
+class EquationPowerNotSupportedException(Exception):
+    pass
+
+class InvalidFormatException(Exception):
     pass
