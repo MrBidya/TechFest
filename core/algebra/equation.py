@@ -2,9 +2,11 @@ import math
 import re
 import sympy
 import sys
+from sympy.simplify.simplify import simplify
+from sympy.core.numbers import Rational
 from .equation_helpers import get_eq_power, extract_var, get_quad_coeffs, prepare_input
 from .meta import AlgebraMeta
-from .exceptions import EquationPowerNotSupportedException
+from .exceptions import EquationPowerNotSupportedException, InvalidFormatException
 
 
 class Equation:
@@ -18,7 +20,7 @@ class Equation:
     def from_str(input_str):
         # Can be made more generic using metaclass and inserting power
         # to each subclass but for now powers 2 and 4 are enough
-        input_str = input_str.replace(' ','')
+        input_str = input_str.replace(' ','').replace('^1','')
         powers_to_eq_types = {
                                 1 : LinearEquation,
                                 2 : QuadraticEquation,
@@ -34,11 +36,41 @@ class Equation:
         return eq_type.from_str(input_str)
 
 class LinearEquation(Equation):
-    pass
+    def __init__(self, a=1, b=0, var='x', power=1, res=None, string=None):
+        self.a = a
+        self.b = b
+        self.var = var
+        self.power = power
+        self.res = res
+        if string is not None:
+            self.string = string
+        else:
+            self.string = '{}*{}{}'.format(self.a, self.var, self.b)
+
+    @staticmethod
+    def from_str(input_str):
+        eq_var = extract_var(input_str)
+        coefs = re.findall(r'-?[0-9]+', input_str)
+        if len(coefs) != 2:
+            raise InvalidFormatException('Linear equations have the form a*x + b, instead got {}'.format(input_str))
+        a_coef = int(coefs[0])
+        b_coef = int(coefs[1])
+        obj = LinearEquation(a=a_coef,b=b_coef, var=eq_var)
+        return obj
+
+    def solve(self):
+        # sympy hacks ^_^
+        self.b = Rational(self.b)
+        self.a = Rational(self.a)
+        res = -self.b / self.a
+        self.res = res
+        return res,
+
+
 
 
 class QuadraticEquation(Equation):
-    def __init__(self, a=1, b=1, c=1, var='x',power=2, res1=None, res2=None, string=None):
+    def __init__(self, a=1, b=1, c=0, var='x',power=2, res1=None, res2=None, string=None):
         self.SQRT_SIGN = '√'
         self.INVALID_QUADRATIC_EQUATION = 'Invalid quadratic equation!'
 
@@ -52,7 +84,7 @@ class QuadraticEquation(Equation):
         if string is not None:
             self.string = string
         else:
-            self.string = '{}*{}^2 {}*{} {}'.format(self.a, self.var, self.b, self.var, self.c)
+            self.string = '{}*{}^2{}*{}{}'.format(self.a, self.var, self.b, self.var, self.c)
 
     @staticmethod
     def from_str(input_str):
@@ -60,7 +92,7 @@ class QuadraticEquation(Equation):
         coefs = re.findall(r'-?[0-9]+', input_str)
         if len(coefs) != 4:
             # If here, then prepare_input method has failed. Raise
-            raise ValueError('Something went wrong while preparing input_str')
+            raise ValueError('Something went wrong while parsing input')
 
         # Coefs contains the following:
         # index 0 is a
@@ -90,6 +122,8 @@ class BiquadraticEquation(QuadraticEquation):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.power = 4
+        self.res4 = None
+        self.res5 = None
 
     @staticmethod
     def from_str(input_str):
@@ -97,7 +131,7 @@ class BiquadraticEquation(QuadraticEquation):
         coefs = re.findall(r'-?[0-9]+', input_str)
         if len(coefs) != 5:
             # If here, then prepare_input method has failed. Raise
-            raise ValueError('Something went wrong while preparing input_str')
+            raise ValueError('Something went wrong while parsing input')
 
         # Coefs contains the following:
         # index 0 is a
@@ -121,16 +155,20 @@ class BiquadraticEquation(QuadraticEquation):
         if y1 > 0:
             sol1, sol2 = sympy.sqrt(y1), -sympy.sqrt(y1)
             solutions.extend([sol1, sol2])
+            self.res1, self.res2 = sol1, sol2
         elif y1 == 0:
             sol1 = sol2 = sympy.sqrt(y1)
             solutions.append(sol1)
+            self.res1 = sol1
 
         if y2 > 0:
             sol3, sol4 = sympy.sqrt(y2), -sympy.sqrt(y2)
             solutions.extend([sol3, sol4])
+            self.res3, self.res4 = sol3, sol4
         elif y2 == 0:
             sol3 = sol4 = sympy.sqrt(y2)
             solutions.append(sol3)
+            self.res3 = sol3
         if not solutions:
             return 'No real roots'
         return solutions

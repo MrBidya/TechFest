@@ -98,8 +98,22 @@ def prepare_bidquad_eq(input_str):
 
 
 def prepare_linear_eq(input_str):
-    pass
+    # Just check if coeff before x is passed
+    eq_var = extract_var(input_str)
+    split_by_var = input_str.split(eq_var)
 
+    if len(re.findall(r'^\d+\*', input_str)) == 1:
+        # All ok, return
+        return input_str
+
+    if split_by_var[0] == '':
+        input_str = '1*' + input_str
+        return input_str
+    # Check if coeff A is passed with * sign
+    if '*' not in split_by_var[0]:
+        split_by_var[0] = split_by_var[0] + '*'
+        input_str = eq_var.join(split_by_var)
+    return input_str
 
 
 def extract_var(input_str):
@@ -142,8 +156,12 @@ def get_quad_coeffs(input_str, eq_var):
 
 
 def get_eq_power(input_str):
-    # 'x^4 - x^2 - 10' will return 4
-    power = int(re.match('\d+', input_str.split('^')[1]).group())
+    # 'x^4 - x^2 - 10' returns 4
+    # 'x-10' return 1
+    try:
+        power = int(re.match('\d+', input_str.split('^')[1]).group())
+    except IndexError:
+        power = 1
     return power
 
 

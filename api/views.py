@@ -29,11 +29,16 @@ class EquationView(APIView):
         #        {"x2" : 3}
         #    ]
         #}
-        result, eq_var = solve_eq(request_eq)
-        if result == 'No real roots':
-            data = {"answer": result}
-        else:
-            data = {"answer": [{"{}{}".format(eq_var, index + 1):int(value) if type(value) == Integer else str(value)} for index, value in enumerate(result)]}
-        return Response(data=data)
 
+        # solve_eq returns ([answer1, answer2...], eq_var)
+        solved_eq = solve_eq(request_eq)
+        if len(solved_eq) == 1:
+            data = {"errors": solved_eq[0]}
+        else:
+            result, eq_var = solved_eq
+            if result == 'No real roots':
+                data = {"answer": result}
+            else:
+                data = {"answer": [{"{}{}".format(eq_var, index + 1):int(value) if type(value) == Integer else str(value)} for index, value in enumerate(result)]}
+        return Response(data=data)
 
