@@ -57,6 +57,7 @@ THIRD_PARTY_APPS = [
 LOCAL_APPS = [
     # custom users app
     'techfest.users.apps.UsersConfig',
+    'techfest',
     # Your stuff: custom apps go here
 ]
 
