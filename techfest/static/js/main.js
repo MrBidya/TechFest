@@ -6,7 +6,7 @@ $(function(){
 
     $('#next-step').on('click', function(e){
         var activeBtn = $('.user-actions button').hasClass('active') ? 
-            $('#next-step').click() : alert('You have to select a type!');
+            $('#next-step').click() : $('.alert-warning').removeClass('hide');
 
         e.preventDefault();
     });
