@@ -1,0 +1,96 @@
+html {
+    min-height: 100%;
+    font-size: 62.5%;
+}
+
+body {
+	min-height: 100vh;
+	font-family: $font-family-base;
+	color: $body-text-color;
+	font-size: 1.4rem;
+	line-height: 2rem;
+	display: flex;
+	flex-direction: column;
+	position: relative;
+}
+
+html, body, p, a, ul, li, div, span, hr, input, textarea, form, button {
+	margin: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+	margin: 0;
+	font-family: $heading-font-family;
+	color: $big-heading-color;
+}
+
+h1 {
+	font-size: $font-size-h1;
+}
+
+h2 {
+	font-size: $font-size-h2;
+}
+
+h3 {
+	font-size: $font-size-h3;
+}
+
+h4 {
+	font-size: $font-size-h4;
+}
+
+h5 {
+	font-size: $font-size-h5;
+}
+
+h6 {
+	font-size: $font-size-h6;
+}
+
+@media (max-width: $screen-sm) {
+	$font-size-base: 14px;
+	$font-size-h1: 30px;
+	$font-size-h2: 26px;
+	$font-size-h3: 22px;
+	$font-size-h4: 18px;
+	$font-size-h5: 16px;
+	$font-size-h6: $font-size-base;
+
+	h1 {
+		font-size: $font-size-h1;
+	}
+
+	h2 {
+		font-size: $font-size-h2;
+	}
+
+	h3 {
+		font-size: $font-size-h3;
+	}
+
+	h4 {
+		font-size: $font-size-h4;
+	}
+
+	h5 {
+		font-size: $font-size-h5;
+	}
+
+	h6 {
+		font-size: $font-size-h6;
+	}
+}
+
+a {
+	text-decoration: none;
+	color: $anchor-color;
+	@include smooth-transition(color, .2s);
+
+	&:hover,
+	&:active,
+	&:focus {
+		color: $brand-primary;
+		text-decoration: none;
+	}
+}

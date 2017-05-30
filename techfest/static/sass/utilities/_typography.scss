@@ -1,0 +1,20 @@
+.heading {
+	&.heading-big {
+		font-size: $font-size-h1;
+	}
+
+	&.heading-medium {
+		font-size: $font-size-h2;
+	}
+
+	&.heading-small {
+		font-family: 'Poppins Semibold';
+		color: $dark-grey;
+	}
+}
+
+.body-text {
+	font-family: 'Karla';
+	color: $medium-grey;
+	font-size: 1.6rem;
+}

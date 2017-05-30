@@ -1,0 +1,46 @@
+#controls {
+	.option {
+		cursor: pointer;
+		height: 150px;
+		border-top: 1px solid $light-grey;
+		border-right: 1px solid $light-grey;
+		@include smooth-transition(.3s);
+
+		&:last-child {
+			border-right: 0;
+		}
+
+		.text {
+			position: relative;
+			@include smooth-transition(.3s);
+
+			&::before {
+				content: "\e900";
+				position: absolute;
+				top: -100%;
+				right: 0;
+				left: 0;
+				color: $brand-primary;
+				font-family: 'tech-fest';
+				font-size: 1.5rem;
+				opacity: 0;
+				visibility: hidden;
+				@include smooth-transition(.3s);
+			}
+		}
+
+		&.active {
+			border-color: $brand-primary;
+
+			.text {
+				color: $brand-primary;
+
+				&::before {
+					top: calc(-100% - #{$s-xs});
+					opacity: 1;
+					visibility: visible;	
+				}
+			}
+		}
+	}
+}

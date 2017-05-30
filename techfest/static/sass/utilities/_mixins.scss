@@ -1,0 +1,3 @@
+@mixin smooth-transition($event: all, $duration: .5s) {
+	transition: $event $duration cubic-bezier(.340, .125, 0, .970);
+}
