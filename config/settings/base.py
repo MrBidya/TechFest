@@ -50,6 +50,7 @@ THIRD_PARTY_APPS = [
     'allauth.account',  # registration
     'allauth.socialaccount',  # registration
     'rest_framework',
+    'sass_processor',
 ]
 
 # Apps specific for this project go here.
