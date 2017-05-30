@@ -2,6 +2,11 @@
 	.user-actions {
 		.option {
 			position: relative;
+			margin-right: $s-md;
+
+			&:last-child {
+				margin-right: 0;
+			}
 
 			&::before {
 				content: "\e900";
@@ -38,6 +43,30 @@
 		&:active,
 		&:focus {
 			color: $brand-primary;
+		}
+	}
+
+	@media (max-width: $screen-sm-max) {
+		.user-actions {
+			.option {
+				margin-bottom: $s-sm;
+			}
+		}
+	}
+
+	@media (max-width: $screen-xs-max) {
+		.user-actions {
+			.option {
+				margin-right: $s-sm;
+
+				&:last-child {
+					margin-right: 0;
+				}
+			}
+		}
+
+		#next-step {
+			display: none;
 		}
 	}
 }

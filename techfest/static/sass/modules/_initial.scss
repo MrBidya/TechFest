@@ -48,6 +48,19 @@ h6 {
 	font-size: $font-size-h6;
 }
 
+a {
+	text-decoration: none;
+	color: $anchor-color;
+	@include smooth-transition(color, .2s);
+
+	&:hover,
+	&:active,
+	&:focus {
+		color: $brand-primary;
+		text-decoration: none;
+	}
+}
+
 @media (max-width: $screen-sm) {
 	$font-size-base: 14px;
 	$font-size-h1: 30px;
@@ -82,15 +95,8 @@ h6 {
 	}
 }
 
-a {
-	text-decoration: none;
-	color: $anchor-color;
-	@include smooth-transition(color, .2s);
-
-	&:hover,
-	&:active,
-	&:focus {
-		color: $brand-primary;
-		text-decoration: none;
+@media (max-width: $screen-xs) {
+	.container {
+		padding: 0 $mobile-side-offset;
 	}
 }
