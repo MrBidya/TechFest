@@ -1,0 +1,35 @@
+.btn {
+	@include smooth-transition(all, .5s);
+
+	&:hover,
+	&:active,
+	&:focus,
+	&:focus:active,
+	&:active:focus,
+	&.focus,
+	&.active {
+		outline: 0;
+		box-shadow: none;
+	}
+}
+
+.btn-ghost {
+	border: 1px solid $light-grey;
+	background-color: transparent;
+
+	&:hover,
+	&:active,
+	&:focus,
+	&:focus:active,
+	&:active:focus,
+	&.focus,
+	&.active {
+		color: $brand-primary;
+		border-color: $brand-primary;
+	}
+}
+
+.btn-md {
+	min-width: $btn-md-min-width;
+	@include button-size(0, $s-sm, 1.6rem, $btn-md-line-height, $border-radius-base);
+}

@@ -4,7 +4,7 @@
 		height: 150px;
 		border-top: 1px solid $light-grey;
 		border-right: 1px solid $light-grey;
-		@include smooth-transition(.3s);
+		@include smooth-transition(all, .4s);
 
 		&:last-child {
 			border-right: 0;
@@ -12,7 +12,7 @@
 
 		.text {
 			position: relative;
-			@include smooth-transition(.3s);
+			@include smooth-transition(all, .4s);
 
 			&::before {
 				content: "\e900";
@@ -22,10 +22,10 @@
 				left: 0;
 				color: $brand-primary;
 				font-family: 'tech-fest';
-				font-size: 1.5rem;
+				font-size: 1.4rem;
 				opacity: 0;
 				visibility: hidden;
-				@include smooth-transition(.3s);
+				@include smooth-transition(all, .4s);
 			}
 		}
 

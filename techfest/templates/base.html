@@ -29,11 +29,24 @@
 
   <body>
       {% block content %}
-        <div id="main" class='screen-height flex flex-column justify-content-center'>
-          <div id="current-step" class='flex flex-grow flex-column justify-content-center'>
-            <div class="container">            
-              <h4 class='heading m-b-2'>What type of task do you have?</h4>
-              <p class="information">Please select one option</p>
+        <div id="main" class='screen-height flex flex-column'>
+          <div id="current-step" class='flex flex-grow flex-row'>
+            <div class="container flex align-items-center">
+              <div class="flex-grow">
+                <h4 class='heading m-b-2'>What type of task do you have?</h4>
+                <p class="information">Please select one option</p>
+                <div class="user-actions p-t-3 p-b-3">
+                  <button class="btn btn-ghost btn-md m-r-3 option">x/a=?</button>
+                  <button class="btn btn-ghost btn-md m-r-3 option active">y = 2x + 1</button>
+                  <button class="btn btn-ghost btn-md m-r-3 option">x<sup>2</sup> + x + 1 = ?</button>
+                  <button class="btn btn-ghost btn-md m-r-3 option">x/2 &le; ?</button>
+                  <button class="btn btn-ghost btn-md option">y &le; x<sup>2</sup> + 1</button>
+                </div>
+              </div>
+              <a href="" id="next-step" class='text-center'>
+                <i class="icon-arrow-right"></i>
+                <span class='block'>Next step</span>
+              </a>
             </div>
           </div>
           <div id="controls">

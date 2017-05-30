@@ -1,2 +1,43 @@
 #current-step {
+	.user-actions {
+		.option {
+			position: relative;
+
+			&::before {
+				content: "\e900";
+				font-family: 'tech-fest';
+				font-size: 1.4rem;
+				color: $brand-primary;
+				position: absolute;
+				top: $s-xs / 2;
+				left: 50%;
+				transform: translateX(-50%);
+				line-height: normal;
+				background-color: $white-color;
+				border-radius: 50%;
+				z-index: 1;
+				opacity: 0;
+				visibility: hidden;
+				@include smooth-transition(all, .5s);
+			}
+
+			&.active {
+				&::before {
+					top: calc(-1.4rem / 2);
+					opacity: 1;
+					visibility: visible;
+				}
+			}
+		}
+	}
+
+	#next-step {
+		@include smooth-transition(color, .3s);
+
+		&:hover,
+		&:active,
+		&:focus {
+			color: $brand-primary;
+		}
+	}
 }
