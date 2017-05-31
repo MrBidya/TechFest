@@ -13,7 +13,7 @@ class Equation(object):
 
         # Check if right side is passed
         split_eq_str = equation_str.split('=')
-        if len(split_eq_str) == 2:
+        if len(split_eq_str) == 2 and split_eq_str[1]:
             left_side = simplify(split_eq_str[0])
             right_side = simplify(split_eq_str[1])
             equation = Eq(left_side - right_side)
@@ -53,13 +53,13 @@ class Equation(object):
 
 class Inequality(object):
     def __init__(self, inequality_str):
-        # Validate equation_str
+        # Validate inequality str
         inequality_str = validate_inequality(inequality_str)
 
         # Check if right side is passed
         split_ie_str = re.split('<|>|>=|<=|', inequality_str)
 
-        if len(split_ie_str) == 2 and is_number(split_ie_str[1]):
+        if len(split_ie_str) == 2 and split_ie_str[1]:
             inequality = Eq(simplify(split_ie_str[0]), simplify(split_ie_str[1]))
         else:
             inequality = Eq(simplify(split_eq_str[0], 0))
