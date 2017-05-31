@@ -61,6 +61,16 @@ a {
 	}
 }
 
+.alert-warning {
+	border-color: #a593e0;
+	background-color: rgb(203, 191, 242);
+
+	h6 {
+		color: #FFFFFF;
+		font-weight: bold;
+	}
+}
+
 @media (max-width: $screen-sm) {
 	$font-size-base: 14px;
 	$font-size-h1: 30px;
