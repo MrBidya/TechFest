@@ -1,0 +1,68 @@
+#toast-container {
+    display: block;
+    position: fixed;
+    z-index: 10000;
+
+    @media only screen and (max-width: $screen-sm) {
+        min-width: 100%;
+        bottom: 0%;
+    }
+
+    @media only screen and (min-width: $screen-sm-min) and (max-width: $screen-md) {
+        left: 5%;
+        bottom: 7%;
+        max-width: 90%;
+    }
+
+    @media only screen and (min-width: $screen-lg) {
+        top: 5%;
+        right: 7%;
+        max-width: 86%;
+    }
+}
+
+.toast {
+    border-radius: 2px;
+    top: 35px;
+    width: auto;
+    clear: both;
+    margin-top: 10px;
+    position: relative;
+    max-width: 100%;
+    height: auto;
+    min-height: $toast-height;
+    line-height: 1.5em;
+    word-break: break-all;
+    background-color: $toast-color;
+    padding: 10px 35px;
+    font-size: 1.1rem;
+    font-weight: 300;
+    color: $toast-text-color;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  	box-shadow: 0 2px 2px transparentize($black-color, .97), 0 4px 4px transparentize($black-color, .97), 0 8px 8px transparentize($black-color, .97);
+
+    .btn,
+    .btn-flat {
+        margin: 0;
+        margin-left: 3rem;
+    }
+
+    &.rounded {
+        border-radius: 50px;
+    }
+
+    @media only screen and (max-width: $screen-sm) {
+        width: 100%;
+        border-radius: 0;
+    }
+
+    @media only screen and (min-width: $screen-sm-min) and (max-width: $screen-md) {
+        float: left;
+    }
+
+    @media only screen and (min-width: $screen-lg) {
+        float: right;
+    }
+}
