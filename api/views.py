@@ -51,9 +51,12 @@ class InequalityView(APIView):
             return Response(data={'You must pass a keyvalue pair with key "inequality" and the actual equation as value string' })
 
         # solve_eq returns ([answer1, answer2...], eq_vars)
-        solved_ie = solve_ie(request_ie)
-        if len(solved_eq) == 1:
-            data = {"errors": solved_ie[0]}
+        try:
+            solved_ie = solve_ie(request_ie)
+        except ProblemMessageException as e:
+            data = {"answer" : str(e)}
+        except Exception as e:
+            data = {"errors": str(e)}
         else:
             result, ie_var = solved_ie
             if result == 'No real roots':

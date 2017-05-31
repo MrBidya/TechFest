@@ -16,8 +16,6 @@ def solve_ie(inequality):
         return ''
     ie = Inequality(inequality)
     result = ie.solve()
-    if not result:
-        result = 'No real roots'
-    return result, ie.get_ie_var()
+    return result, ie.get_ie_vars()
 
 

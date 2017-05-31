@@ -2,8 +2,10 @@ import re
 from .parser import validate_equation, validate_inequality
 from sympy import simplify, Eq, solveset, Symbol
 from sympy.solvers import solve
-from sympy.logic.boolalg import BooleanTrue, BooleanFalse
-from .exceptions import AnyValueIsASolutionException, NoRealRootsException
+from sympy.logic.boolalg import BooleanTrue, BooleanFalse, Or, And
+from sympy.solvers.inequalities import reduce_inequalities
+from .exceptions import AnyValueIsASolutionException, NoRealRootsException, InvalidFormatException
+from core.algebra.helpers import format_inequality_result_string
 
 
 class Equation(object):
@@ -26,8 +28,7 @@ class Equation(object):
 
         self.equation = equation
 
-    def solve(self):
-        roots = solve(self.equation)
+    def __format_result(self, roots):
         results = []
         # Check if roots make sense
         if isinstance(roots, BooleanTrue) or isinstance(roots, BooleanFalse):
@@ -47,6 +48,11 @@ class Equation(object):
         return results
 
 
+    def solve(self):
+        roots = solve(self.equation)
+        result = self.__format_result(roots)
+        return result
+
     def get_eq_vars(self):
         return self.variables
 
@@ -59,17 +65,38 @@ class Inequality(object):
         # Check if right side is passed
         split_ie_str = re.split('<|>|>=|<=|', inequality_str)
 
-        if len(split_ie_str) == 2 and split_ie_str[1]:
-            inequality = Eq(simplify(split_ie_str[0]), simplify(split_ie_str[1]))
-        else:
-            inequality = Eq(simplify(split_eq_str[0], 0))
+        # Save ie str, because sympy does not have Ie object (analogous to Eq obj)
+        if len(split_ie_str) == 1:
+            # 'x-1' is invalid inequality
+            raise InvalidFormatException()
+        elif len(split_ie_str) == 2 and not split_ie_str[1]:
+            # make 'x-1<' to 'x-1<0'
+            inequality_str = inequality_str + '0'
 
-        self.inequality = inequality
+        self.inequality_str = inequality_str
+
+        # Set inequality variables
+        # NOTE that only the first letter is extracted for now
+        self.variables = extract_var(self.inequality_str)
+
+    def __format_result(self, result):
+        if isinstance(result, Or) or isinstance(result, And):
+            result = format_inequality_result_string(result)
+        if isinstance(result, BooleanFalse):
+            result = []
+        elif isinstance(result, BooleanTrue):
+            raise AnyValueIsASolutionException()
+        return result
+
+
 
     def solve(self):
-        import ipdb; ipdb.set_trace() # BREAKPOINT
-        pass
+        result = reduce_inequalities(self.inequality_str)
+        result = self.__format_result(result)
+        return result
 
+    def get_ie_vars(self):
+        return self.variables
 
 def extract_var(input_str):
     for letter in [chr(x) for x in range(97, 123)]:
