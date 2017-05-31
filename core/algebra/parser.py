@@ -21,6 +21,11 @@ def validate_equation(input_str):
     return input_str
 
 
+def validate_inequality(input_str):
+    # Do some stuff to avoid trouble
+    return input_str
+
+
 def extract_var(input_str):
     for letter in [chr(x) for x in range(97, 123)]:
         # lower lowers all letters

@@ -5,7 +5,8 @@ from rest_framework.response import Response
 from rest_framework import authentication, permissions
 
 # Create your views here.
-from .helpers import solve_eq
+from .helpers import solve_eq, solve_ie
+from core.algebra.exceptions import ProblemMessageException
 
 
 class IndexView(APIView):
@@ -30,16 +31,16 @@ class EquationView(APIView):
         #    ]
         #}
 
-        # solve_eq returns ([answer1, answer2...], eq_var)
-        solved_eq = solve_eq(request_eq)
-        if len(solved_eq) == 1:
-            data = {"errors": solved_eq[0]}
+        # solve_eq returns ([answer1, answer2...], eq_vars)
+        try:
+            solved_eq = solve_eq(request_eq)
+        except ProblemMessageException as e:
+            data = {"answer" : str(e)}
+        except Exception as e:
+            data = {"errors": str(e)}
         else:
-            result, eq_var = solved_eq
-            if result == 'No real roots':
-                data = {"answer": result}
-            else:
-                data = {"answer": [{"{}{}".format(eq_var, index + 1):int(value) if type(value) == Integer else str(value)} for index, value in enumerate(result)]}
+            result, eq_vars = solved_eq
+            data = {"answer": [{"{}{}".format(eq_vars[0], index + 1):int(value) if type(value) == Integer else str(value)} for index, value in enumerate(result)]}
         return Response(data=data)
 
 
@@ -49,7 +50,7 @@ class InequalityView(APIView):
         if not request_ie:
             return Response(data={'You must pass a keyvalue pair with key "inequality" and the actual equation as value string' })
 
-        # solve_eq returns ([answer1, answer2...], eq_var)
+        # solve_eq returns ([answer1, answer2...], eq_vars)
         solved_ie = solve_ie(request_ie)
         if len(solved_eq) == 1:
             data = {"errors": solved_ie[0]}
