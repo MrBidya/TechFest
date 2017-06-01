@@ -32,3 +32,11 @@ def extract_var(input_str):
         if letter in input_str.lower():
             return letter
     raise ValueError('Cannot parse equation variable')
+
+
+def is_number(input_str):
+    try:
+        input_str = int(input_str)
+        return True
+    except:
+        return False

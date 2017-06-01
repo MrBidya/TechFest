@@ -1,5 +1,5 @@
 import re
-from .parser import validate_equation, validate_inequality
+from .parser import validate_equation, validate_inequality, extract_var, is_number
 from sympy import simplify, Eq, solveset, Symbol
 from sympy.solvers import solve
 from sympy.logic.boolalg import BooleanTrue, BooleanFalse, Or, And
@@ -89,7 +89,6 @@ class Inequality(object):
         return result
 
 
-
     def solve(self):
         result = reduce_inequalities(self.inequality_str)
         result = self.__format_result(result)
@@ -98,17 +97,4 @@ class Inequality(object):
     def get_ie_vars(self):
         return self.variables
 
-def extract_var(input_str):
-    for letter in [chr(x) for x in range(97, 123)]:
-        # lower lowers all letters
-        if letter in input_str.lower():
-            return letter
-    raise ValueError('Cannot parse equation variable')
 
-
-def is_number(input_str):
-    try:
-        input_str = int(input_str)
-        return True
-    except:
-        return False

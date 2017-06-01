@@ -21,7 +21,7 @@ class EquationView(APIView):
     def post(self, request):
         request_eq = request.data.get('equation')
         if not request_eq:
-            return Response(data={'You must pass a keyvalue pair with key "equation" and the actual equation as value string' })
+            return Response(data={'You must pass a keyvalue pair with key "equation" and the actual equation as value string' }, status=403)
         # Return format:
 
         #{
@@ -33,34 +33,34 @@ class EquationView(APIView):
 
         # solve_eq returns ([answer1, answer2...], eq_vars)
         try:
-            solved_eq = solve_eq(request_eq)
+            solved_eq = solve_eq(request_eq.lower())
         except ProblemMessageException as e:
-            data = {"answer" : str(e)}
+            data = {"answer" : str(e), 'status': 200}
         except Exception as e:
-            data = {"errors": str(e)}
+            data = {"errors": str(e), 'status': 400}
         else:
             result, eq_vars = solved_eq
-            data = {"answer": [{"{}{}".format(eq_vars[0], index + 1):int(value) if type(value) == Integer else str(value)} for index, value in enumerate(result)]}
-        return Response(data=data)
+            data = {"answer": [{"{}{}".format(eq_vars[0], index + 1):int(value) if type(value) == Integer else str(value)} for index, value in enumerate(result)], 'status': 200}
+        return Response(data=data, status=data['status'])
 
 
 class InequalityView(APIView):
     def post(self, request):
         request_ie = request.data.get('inequality')
         if not request_ie:
-            return Response(data={'You must pass a keyvalue pair with key "inequality" and the actual equation as value string' })
+            return Response(data={'You must pass a keyvalue pair with key "inequality" and the actual equation as value string' }, status=403)
 
         # solve_eq returns ([answer1, answer2...], eq_vars)
         try:
             solved_ie = solve_ie(request_ie)
         except ProblemMessageException as e:
-            data = {"answer" : str(e)}
+            data = {"answer" : str(e), 'status': 200}
         except Exception as e:
-            data = {"errors": str(e)}
+            data = {"errors": str(e), 'status': 400}
         else:
             result, ie_var = solved_ie
             if result == 'No real roots':
-                data = {"answer": result}
+                data = {"answer": result, 'status': 200}
             else:
-                data = {"answer": [{"{}{}".format(ie_var, index + 1):int(value) if type(value) == Integer else str(value)} for index, value in enumerate(result)]}
-        return Response(data=data)
+                data = {"answer": [{"{}{}".format(ie_var, index + 1):int(value) if type(value) == Integer else str(value)} for index, value in enumerate(result)], 'status': 200}
+        return Response(data=data, status=data['status'])
