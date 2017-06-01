@@ -1,3 +1,4 @@
+import importlib
 from sympy.core.numbers import Integer
 from django.shortcuts import render
 from rest_framework.views import APIView
@@ -7,17 +8,42 @@ from rest_framework import authentication, permissions
 # Create your views here.
 from .helpers import solve_eq, solve_ie
 from core.algebra.exceptions import ProblemMessageException
+from api.mixins import UsageMixin
+from collections import OrderedDict
 
 
-class IndexView(APIView):
+
+class IndexView(UsageMixin, APIView):
     def get(self, request):
         from .urls import urlpatterns
-        data = {"available endpoints": [x.regex.pattern for x in urlpatterns]}
-        # TODO: can add description to each endpoint and how it should be used
+        data = {"available endpoints": []}
+
+        for endpoint in urlpatterns:
+            # Extract class -> 'api.views.IndexView' -> IndexView
+            split_lookup_str = endpoint.lookup_str.split('.')
+            klass = getattr(importlib.import_module('.'.join(split_lookup_str[:-1])), split_lookup_str[-1])
+
+            endpoint_dict = OrderedDict()
+            endpoint_dict['name'] = klass.__name__
+            endpoint_dict['allowed methods'] = klass._allowed_methods(klass)
+            # Hard coding the /api/ part because how do you get the full regex
+            # when you are including the urls?
+            endpoint_dict['regex'] = '/api/' + endpoint.regex.pattern
+
+            endpoint_dict['usage'] = klass.get_usage()
+            endpoint_dict['example'] = klass.get_example()
+            data["available endpoints"].append(endpoint_dict)
         return Response(data=data)
 
+    @classmethod
+    def get_usage(cls):
+        return 'GET me to view this information'
 
-class EquationView(APIView):
+
+class EquationView(UsageMixin, APIView):
+    usage_type = 'a*x - b'
+    usage_example = '10*x-2'
+
     def post(self, request):
         request_eq = request.data.get('equation')
         if not request_eq:
@@ -44,7 +70,10 @@ class EquationView(APIView):
         return Response(data=data, status=data['status'])
 
 
-class InequalityView(APIView):
+class InequalityView(UsageMixin, APIView):
+    usage_type = 'a*x - b < c'
+    usage_example = '10*x - 2 < 3'
+
     def post(self, request):
         request_ie = request.data.get('inequality')
         if not request_ie:

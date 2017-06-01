@@ -8,7 +8,7 @@ from .exceptions import AnyValueIsASolutionException, NoRealRootsException, Inva
 from core.algebra.helpers import format_inequality_result_string
 
 
-class Equation(object):
+class Equation:
     def __init__(self, equation_str):
         # Validate equation_str
         equation_str = validate_equation(equation_str)
@@ -46,6 +46,8 @@ class Equation(object):
             if not results:
                 raise NoRealRootsException()
         return results
+
+
 
 
     def solve(self):
