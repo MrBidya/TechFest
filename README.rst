@@ -1,7 +1,9 @@
 TechFest
 ========
 
-Math problem solver
+Project for Softuni Techfest 3-4 June 2017. Provides an API to a math problem solver. Can solve various types of equations
+as well as numerous inequality types. You can find usage info on :: /api/
+after ou setup the project
 
 .. image:: https://img.shields.io/badge/built%20with-Cookiecutter%20Django-ff69b4.svg
      :target: https://github.com/pydanny/cookiecutter-django/
