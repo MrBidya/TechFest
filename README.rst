@@ -4,7 +4,7 @@ TechFest
 Project for Softuni Techfest 3-4 June 2017. Provides an API to a math problem solver. Can solve various types of equations
 as well as numerous inequality types. You can find usage info on::
 
-/localhost:8000/api/
+http://localhost:8000/api/
 
 after you setup the project
 
