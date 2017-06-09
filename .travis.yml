@@ -9,3 +9,13 @@ before_install:
 language: python
 python:
   - "3.5"
+addons:
+    postgresql: '9.4'
+services: postgresql
+install:
+  - pip install -r requirements/base.txt
+  - pip install -r requirements/test.txt
+before_script:
+  - psql -c 'CREATE DATABASE techfest;' -U postgres
+script:
+  - python manage.py test
