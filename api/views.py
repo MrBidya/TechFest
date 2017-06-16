@@ -16,7 +16,7 @@ from collections import OrderedDict
 class IndexView(UsageMixin, APIView):
     def get(self, request):
         from .urls import urlpatterns
-        data = {"available endpoints": []}
+        data = {"available_endpoints": []}
 
         for endpoint in urlpatterns:
             # Extract class -> 'api.views.IndexView' -> IndexView
@@ -25,14 +25,14 @@ class IndexView(UsageMixin, APIView):
 
             endpoint_dict = OrderedDict()
             endpoint_dict['name'] = klass.__name__
-            endpoint_dict['allowed methods'] = klass._allowed_methods(klass)
+            endpoint_dict['allowed_methods'] = klass._allowed_methods(klass)
             # Hard coding the /api/ part because how do you get the full regex
             # when you are including the urls?
             endpoint_dict['regex'] = '/api/' + endpoint.regex.pattern
 
             endpoint_dict['usage'] = klass.get_usage()
             endpoint_dict['example'] = klass.get_example()
-            data["available endpoints"].append(endpoint_dict)
+            data["available_endpoints"].append(endpoint_dict)
         return Response(data=data)
 
     @classmethod
