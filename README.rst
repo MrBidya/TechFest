@@ -6,6 +6,17 @@ Currently solves all types of equations as well as a few types of inequalities. 
 
 :License: MIT
 
+Setup
+-----
+
+
+To setup run the following command::
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+$ python manage.py test
+
+
+
 Screenshots
 -----------
 
