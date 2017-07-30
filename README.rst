@@ -2,6 +2,7 @@ TechFest
 ========
 
 Project for Softuni Techfest 3-4 June 2017. Implements a simple math problem solver and provides a web API for easy usage.
+Currently solves all types of equations as well as a few types of inequalities. See usage examples below.
 
 :License: MIT
 
