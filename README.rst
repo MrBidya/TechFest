@@ -11,9 +11,8 @@ Setup
 
 
 To setup run the following command::
-^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-$ python manage.py test
+$ pip install -r requirements.txt
 
 
 
