@@ -8,10 +8,14 @@ Project for Softuni Techfest 3-4 June 2017. Implements a simple math problem sol
 Screenshots
 -----------
 
-Info Page
+Info Page:
+
+
 ..image:: http://i.imgur.com/G10GqjQ.png
 
-Solving a simple quadratic equation
+Solving a simple quadratic equation:
+
+
 ..image:: http://i.imgur.com/g4qdXSu.png
 
 Basic Commands
