@@ -19,6 +19,10 @@ Solving a simple quadratic equation:
 
 .. image:: http://i.imgur.com/g4qdXSu.png
 
+Solving a simple inequality:
+
+.. image:: http://i.imgur.com/5DWYFC7.png
+
 Basic Commands
 --------------
 
