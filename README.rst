@@ -11,12 +11,13 @@ Screenshots
 Info Page:
 
 
-..image:: http://i.imgur.com/G10GqjQ.png
+.. image:: http://i.imgur.com/G10GqjQ.png
+
 
 Solving a simple quadratic equation:
 
 
-..image:: http://i.imgur.com/g4qdXSu.png
+.. image:: http://i.imgur.com/g4qdXSu.png
 
 Basic Commands
 --------------
